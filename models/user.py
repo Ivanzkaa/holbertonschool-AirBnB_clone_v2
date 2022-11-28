@@ -8,7 +8,7 @@ import models
 
 class User(BaseModel):
     """This class defines a user by various attributes"""
-    if models.storage_type = 'db':
+    if models.storage_type == 'db':
         __tablename__ = "users"
         first_name = Column(String(128), nullable=True)
         last_name = Column(String(128), nullable=True)
