@@ -29,10 +29,12 @@ def py_text(text="is_cool"):
 
 @app.route('/number/<n>', strict_slashes=False)
 def number_text(n):
+    """dislaying number"""
     return '{} is a number'.format(n)
 
 @app.route('/number_template/<n>', strict_slashes=False)
 def number_template(n):
+    """adding umber template"""
     return render_template('5-number.html', n=n)
 
 if __name__ == '__main__':

@@ -29,6 +29,7 @@ def py_text(text="is_cool"):
 
 @app.route('/number/<n>', strict_slashes=False)
 def number_text(n):
+    """displaying number"""
     return '{} is a number'.format(n)
 
 if __name__ == '__main__':
