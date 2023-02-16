@@ -9,17 +9,19 @@ class FileStorage:
     __objects = {}
 
     def all(self, cls=None):
-        """Returns a dictionary of models currently in storage
-        Update: returning the list of objects of one type of
-        class"""
+        """returns a dictionary
+        Return:
+            returns a dictionary of __object
+        """
+        dictionary = {}
         if cls is None:
-            return self.__objects
-        dict_storage = {}
-        for key, value in self.__objects.items():
-            if cls == value.__class__:
-                dict_storage[key] = value
-        return dict_storage
-
+            return FileStorage.__objects
+        else:
+            for key, value in FileStorage.__objects.items():
+                if value.__class__ == cls:
+                    dictionary[key] = value
+            return dictionary
+            
     def new(self, obj):
         """Adds new object to storage dictionary"""
         self.all().update({obj.to_dict()['__class__'] + '.' + obj.id: obj})
@@ -44,22 +46,28 @@ class FileStorage:
         from models.review import Review
 
         classes = {
-            'BaseModel': BaseModel, 'User': User, 'Place': Place,
-            'State': State, 'City': City, 'Amenity': Amenity,
-            'Review': Review
-        }
+                    'BaseModel': BaseModel, 'User': User, 'Place': Place,
+                    'State': State, 'City': City, 'Amenity': Amenity,
+                    'Review': Review
+                }
         try:
             temp = {}
             with open(FileStorage.__file_path, 'r') as f:
                 temp = json.load(f)
                 for key, val in temp.items():
-                    self.all()[key] = classes[val['__class__']](**val)
+                        self.all()[key] = classes[val['__class__']](**val)
         except FileNotFoundError:
             pass
 
     def delete(self, obj=None):
-        """delete if it’s inside - if obj is equal to None"""
+        """ delete obj from __objects """
         if obj is not None:
-            key_dict = obj.__class__.__name__ + '.' + obj.id
-            if key_dict in self.__objects:
-                del self.__objects[key_dict]
+            del FileStorage.__objects[obj.to_dict()[
+                '__class__'] + '.' + obj.id]
+            self.save()
+        else:
+            pass
+
+    def close(self):
+        """Call reload() method for deserializing the JSON file to objects"""
+        self.reload()
